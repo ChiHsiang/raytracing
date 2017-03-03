@@ -3,6 +3,7 @@
 *.pch
 *.out
 *.png
+tags
 raytracing
 use-models.h
 out.ppm
