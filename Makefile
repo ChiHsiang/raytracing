@@ -1,4 +1,5 @@
 EXEC = raytracing
+GPROF2DOT = `which gprof2dot`
 
 GIT_HOOKS := .git/hooks/pre-commit
 .PHONY: all
@@ -17,7 +18,7 @@ LDFLAGS = \
 ifeq ($(strip $(PROFILE)),1)
 PROF_FLAGS = -pg
 CFLAGS += $(PROF_FLAGS)
-LDFLAGS += $(PROF_FLAGS) 
+LDFLAGS += $(PROF_FLAGS)
 endif
 
 OBJS := \
@@ -48,6 +49,14 @@ check: $(EXEC)
 	@./$(EXEC) && diff -u baseline.ppm out.ppm || (echo Fail; exit)
 	@echo "Verified OK"
 
+plot: check-gmon
+	gprof ./$(EXEC) | $(GPROF2DOT) | dot -Tpng -o $@.png
+
+check-gmon:
+	@(test -s $(EXEC) || make PROFILE=1)
+	@(test -s gmon.out || ./$(EXEC))
+	@(test -s gmon.out || { echo "ERROR: PROFILE needed be set to 1"; exit 1; })
+
 clean:
 	$(RM) $(EXEC) $(OBJS) use-models.h \
-		out.ppm gmon.out
+		out.ppm gmon.out *.png
