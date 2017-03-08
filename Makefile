@@ -32,6 +32,8 @@ OBJS := \
 
 $(EXEC): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
+	./$@
+	convert out.ppm out.png
 
 main.o: use-models.h
 use-models.h: models.inc Makefile
