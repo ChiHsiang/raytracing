@@ -9,7 +9,7 @@
 #include <assert.h>
 #include <immintrin.h>
 
-static inline
+static inline __attribute__ ((always_inline))
 void normalize(double *v)
 {
     double d = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
@@ -20,13 +20,13 @@ void normalize(double *v)
     v[2] /= d;
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 double length(const double *v)
 {
     return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void add_vector(const double *a, const double *b, double *out)
 {
     __m256i mask = _mm256_set_epi64x(ADDRESS_LOW, ADDRESS_HI, ADDRESS_HI, ADDRESS_HI);
@@ -36,7 +36,7 @@ void add_vector(const double *a, const double *b, double *out)
     _mm256_maskstore_pd(out, mask, dst);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void subtract_vector(const double *a, const double *b, double *out)
 {
     __m256i mask = _mm256_set_epi64x(ADDRESS_LOW, ADDRESS_HI, ADDRESS_HI, ADDRESS_HI);
@@ -46,7 +46,7 @@ void subtract_vector(const double *a, const double *b, double *out)
     _mm256_maskstore_pd(out, mask, dst);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void multiply_vectors(const double *a, const double *b, double *out)
 {
     __m256i mask = _mm256_set_epi64x(ADDRESS_LOW, ADDRESS_HI, ADDRESS_HI, ADDRESS_HI);
@@ -56,7 +56,7 @@ void multiply_vectors(const double *a, const double *b, double *out)
     _mm256_maskstore_pd(out, mask, dst);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void multiply_vector(const double *a, double b, double *out)
 {
     __m256i mask = _mm256_set_epi64x(ADDRESS_LOW, ADDRESS_HI, ADDRESS_HI, ADDRESS_HI);
@@ -66,7 +66,7 @@ void multiply_vector(const double *a, double b, double *out)
     _mm256_maskstore_pd(out, mask, dst);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void cross_product(const double *v1, const double *v2, double *out)
 {
     __m256i mask = _mm256_set_epi64x(ADDRESS_LOW, ADDRESS_HI, ADDRESS_HI, ADDRESS_HI);
@@ -82,7 +82,7 @@ void cross_product(const double *v1, const double *v2, double *out)
     _mm256_maskstore_pd(out, mask, dst_3);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 double dot_product(const double *v1, const double *v2)
 {
     double out[4];
@@ -95,7 +95,7 @@ double dot_product(const double *v1, const double *v2)
     return out[0] + out[1] + out[2];
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 void scalar_triple_product(const double *u, const double *v, const double *w,
                            double *out)
 {
@@ -103,7 +103,7 @@ void scalar_triple_product(const double *u, const double *v, const double *w,
     multiply_vectors(u, out, out);
 }
 
-static inline
+static inline __attribute__ ((always_inline))
 double scalar_triple(const double *u, const double *v, const double *w)
 {
     double tmp[3];
