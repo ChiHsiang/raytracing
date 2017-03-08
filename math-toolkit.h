@@ -90,7 +90,7 @@ double dot_product(const double *v1, const double *v2)
     __m256d c = _mm256_loadu_pd(v1);
     __m256d d = _mm256_loadu_pd(v2);
     __m256d dst = _mm256_mul_pd(c, d);
-    _mm256_maskstore_pd(&out, mask, dst);
+    _mm256_maskstore_pd(&out[0], mask, dst);
 
     return out[0] + out[1] + out[2];
 }
