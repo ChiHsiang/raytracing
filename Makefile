@@ -11,7 +11,7 @@ $(GIT_HOOKS):
 
 CC ?= gcc
 CFLAGS = \
-	-std=gnu99 -Wall -O0 -g
+	-mavx -std=gnu99 -Wall -O0 -g
 LDFLAGS = \
 	-lm
 
@@ -32,6 +32,8 @@ OBJS := \
 
 $(EXEC): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
+	./$@
+	convert out.ppm out.png
 
 main.o: use-models.h
 use-models.h: models.inc Makefile
