@@ -1,0 +1,10 @@
+origin-O0 2.835277
+origin-Ofast 0.654530
+loop-unrolling-O0 2.046054
+loop-unrolling-Ofast 0.622905
+simd-avx-O0 6.03679
+simd-avx-Ofast 3.033363
+openmp-O0 0.515539
+openmp-Ofast 0.192657
+pthread-2-O0 2.086006
+pthread-2-Ofast 0.726592

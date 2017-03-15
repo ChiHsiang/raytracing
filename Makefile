@@ -54,6 +54,9 @@ check: $(EXEC)
 plot: check-gmon
 	gprof ./$(EXEC) | $(GPROF2DOT) | dot -Tpng -o $@.png
 
+compare_plot: output.txt
+	gnuplot scripts/runtime.gp
+
 check-gmon:
 	@(test -s $(EXEC) || make PROFILE=1)
 	@(test -s gmon.out || ./$(EXEC))
