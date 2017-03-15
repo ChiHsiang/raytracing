@@ -4,8 +4,22 @@
 #include "objects.h"
 #include <stdint.h>
 
-void raytracing(uint8_t *pixels, color background_color,
-                rectangular_node rectangulars, sphere_node spheres,
-                light_node lights, const viewpoint *view,
-                int width, int height);
+typedef struct __RAY_DETAIL {
+    uint8_t *pixels;
+    double *background_color;
+    rectangular_node rectangulars;
+    sphere_node spheres;
+    light_node lights;
+    const viewpoint *view;
+    int width;
+    int height;
+} raydetail;
+
+raydetail *set_raydetail(uint8_t *pixels, color background_color,
+                         rectangular_node rectangulars, sphere_node spheres,
+                         light_node lights, const viewpoint *view,
+                         int width, int height);
+
+void raytracing(void *raydetail);
+
 #endif

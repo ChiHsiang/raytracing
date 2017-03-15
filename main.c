@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <pthread.h>
 
 #include "primitives.h"
 #include "raytracing.h"
@@ -40,6 +41,8 @@ int main()
     color background = { 0.0, 0.1, 0.1 };
     struct timespec start, end;
 
+    pthread_t thread1;
+
 #include "use-models.h"
 
     /* allocate by the given resolution */
@@ -49,8 +52,18 @@ int main()
     printf("# Rendering scene\n");
     /* do the ray tracing with the given geometry */
     clock_gettime(CLOCK_REALTIME, &start);
-    raytracing(pixels, background,
-               rectangulars, spheres, lights, &view, ROWS, COLS);
+
+    raydetail *detail = set_raydetail( pixels, background,
+                                       rectangulars, spheres, lights, &view, ROWS, COLS);
+
+
+    pthread_create( &thread1,
+                    NULL,
+                    (void *)&raytracing,
+                    (void *) detail );
+
+    pthread_join(thread1, NULL);
+
     clock_gettime(CLOCK_REALTIME, &end);
     {
         FILE *outfile = fopen(OUT_FILENAME, "wb");
