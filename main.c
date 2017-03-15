@@ -41,7 +41,9 @@ int main()
     color background = { 0.0, 0.1, 0.1 };
     struct timespec start, end;
 
-    pthread_t thread1;
+    int thread_num, k;
+    printf("Please input the thread num: ");
+    scanf("%d", &thread_num);
 
 #include "use-models.h"
 
@@ -49,20 +51,24 @@ int main()
     pixels = malloc(sizeof(unsigned char) * ROWS * COLS * 3);
     if (!pixels) exit(-1);
 
+    pthread_t * tid = (pthread_t *) malloc ( thread_num * sizeof(pthread_t) );
+    raydetail **detail_ptr = (raydetail **) malloc( thread_num * sizeof(pthread_t) );
+
     printf("# Rendering scene\n");
     /* do the ray tracing with the given geometry */
     clock_gettime(CLOCK_REALTIME, &start);
 
-    raydetail *detail = set_raydetail( pixels, background,
-                                       rectangulars, spheres, lights, &view, ROWS, COLS);
+    for (k = 0; k < thread_num; k++) {
+        detail_ptr[k] = set_raydetail( pixels, background,
+                                       rectangulars, spheres, lights, &view, ROWS, COLS, k, thread_num);
+        pthread_create( &tid[k],
+                        NULL,
+                        (void *)&raytracing,
+                        (void *) detail_ptr[k] );
 
+        pthread_join(tid[k], NULL);
+    }
 
-    pthread_create( &thread1,
-                    NULL,
-                    (void *)&raytracing,
-                    (void *) detail );
-
-    pthread_join(thread1, NULL);
 
     clock_gettime(CLOCK_REALTIME, &end);
     {
@@ -75,6 +81,8 @@ int main()
     delete_sphere_list(&spheres);
     delete_light_list(&lights);
     free(pixels);
+    free(tid);
+    free(detail_ptr);
     printf("Done!\n");
     printf("Execution time of raytracing() : %lf sec\n", diff_in_second(start, end));
     return 0;

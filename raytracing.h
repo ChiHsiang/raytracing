@@ -13,12 +13,14 @@ typedef struct __RAY_DETAIL {
     const viewpoint *view;
     int width;
     int height;
+    int tid;
+    int tnum;
 } raydetail;
 
 raydetail *set_raydetail(uint8_t *pixels, color background_color,
                          rectangular_node rectangulars, sphere_node spheres,
                          light_node lights, const viewpoint *view,
-                         int width, int height);
+                         int width, int height, int tid, int tnum);
 
 void raytracing(void *raydetail);
 

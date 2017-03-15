@@ -466,7 +466,7 @@ void raytracing(void * ray)
     idx_stack stk;
 
     int factor = sqrt(SAMPLES);
-    for (int j = 0; j < detail->height; j++) {
+    for (int j = detail->tid; j < detail->height; j = j + detail->tnum) {
         for (int i = 0; i < detail->width; i++) {
             double r = 0, g = 0, b = 0;
             /* MSAA */
@@ -495,13 +495,14 @@ void raytracing(void * ray)
         }
     }
 
+    free(detail);
     pthread_exit(0);
 }
 
 raydetail *set_raydetail(uint8_t *pixels, color background_color,
                          rectangular_node rectangulars, sphere_node spheres,
                          light_node lights, const viewpoint *view,
-                         int width, int height)
+                         int width, int height, int tid, int tnum)
 {
     raydetail *detail = (raydetail *) malloc(sizeof(raydetail));
     detail->pixels = pixels;
@@ -512,6 +513,8 @@ raydetail *set_raydetail(uint8_t *pixels, color background_color,
     detail->view = view;
     detail->width = width;
     detail->height = height;
+    detail->tid = tid;
+    detail->tnum = tnum;
 
     return detail;
 }
